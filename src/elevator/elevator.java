@@ -1,20 +1,23 @@
+package elevator;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import scheduler.scheduler;
 
 public class elevator implements Runnable {
     private int speed;
     private int waitTime ;
     private int currentFloor;
-    private List<Integer> schedule;
-    private List<Integer> remainFloors=new ArrayList<Integer>();
+    private List<request> schedule;
+    private List<request> remainFloors=new ArrayList<request>();
     private scheduler scheduler=new scheduler();
 
     private int floorsCount;
 
     private Thread doScheduleThread=new Thread(this);
 
-    private elevatorDirection direction=elevatorDirection.STAND;
+    private elevatorDirection direction= elevatorDirection.STAND;
     public elevator(int speed,int waitTime ,int currentFloor,int floorsCount){
         this.speed=speed;
         this.waitTime=waitTime;
@@ -59,7 +62,7 @@ public class elevator implements Runnable {
         return true;
     }
 
-    public void doSchedule(List<Integer> schedule){
+    public void doSchedule(List<request> schedule){
         doScheduleThread.stop();
         this.schedule=schedule;
         doScheduleThread=new Thread(this);
@@ -69,14 +72,14 @@ public class elevator implements Runnable {
     @Override
     public void run() {
         remainFloors.clear();
-        for(Integer f :schedule){
-            remainFloors.add(f);
+        for(request r :schedule){
+            remainFloors.add(r);
         }
-        for(Integer f:schedule){
-            go(f);
-            remainFloors.remove(f);
+        for(request r:schedule){
+            go(r.getFloor());
+            remainFloors.remove(r);
         }
-        this.direction=elevatorDirection.STAND;
+        this.direction= elevatorDirection.STAND;
     }
 
     public elevatorDirection getDirection() {
@@ -95,8 +98,8 @@ public class elevator implements Runnable {
             go(floor);
         }
     }
-    public void pressKey(int floor){
-        remainFloors.add(floor);
+    public void pressKey(request r){
+        remainFloors.add(r);
         doSchedule(scheduler.schedule(remainFloors,currentFloor,direction));
     }
 }
