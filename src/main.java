@@ -1,8 +1,4 @@
 import elevator.elevator;
-
-import javax.swing.*;
-import java.sql.Time;
-import java.util.Date;
 import java.util.Scanner;
 import elevator.request;
 

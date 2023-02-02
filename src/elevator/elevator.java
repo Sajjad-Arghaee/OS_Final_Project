@@ -103,4 +103,3 @@ public class elevator implements Runnable {
         doSchedule(scheduler.schedule(remainFloors,currentFloor,direction));
     }
 }
-
