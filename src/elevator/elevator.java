@@ -98,8 +98,8 @@ public class elevator implements Runnable {
             go(floor);
         }
     }
-    public void pressKey(request r){
-        remainFloors.add(r);
+    public void pressKey(List<request> requests){
+        remainFloors.addAll(requests);
         doSchedule(scheduler.schedule(remainFloors,currentFloor,direction));
     }
 }

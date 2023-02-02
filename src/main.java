@@ -1,4 +1,7 @@
 import elevator.elevator;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import elevator.request;
 
@@ -7,9 +10,14 @@ public class main {
         elevator e1 = new elevator(1000,2000,5,15);
         Scanner scanner = new Scanner(System.in);
         int keyPressed;
+        List<request> r = new ArrayList<>();
         while (true){
-            keyPressed=scanner.nextInt();
-            request r=new request(keyPressed,'i');
+            while (true) {
+                keyPressed= scanner.nextInt();
+                if (keyPressed == -1)
+                    break;
+                r.add(new request(keyPressed, 'i'));
+            }
             e1.pressKey(r);
         }
 
