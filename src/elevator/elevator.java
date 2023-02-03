@@ -24,8 +24,9 @@ public class elevator implements Runnable {
         this.currentFloor=currentFloor;
         this.floorsCount=floorsCount;
     }
-    public boolean go(int destinationFloor){
-        if(destinationFloor<1||destinationFloor>floorsCount)return false;
+
+    public List go(int destinationFloor){
+        if(destinationFloor<1||destinationFloor>floorsCount)return null;
 
         if (currentFloor<destinationFloor){//go up
             this.direction=direction.UP;
@@ -54,29 +55,48 @@ public class elevator implements Runnable {
             }
 
         }
-        try {
-            Thread.sleep(waitTime);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        List<request> r = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+        int keyPressed;
+        while (true) {
+            keyPressed= scanner.nextInt();
+            if (keyPressed == -1)
+                break;
+            r.add(new request(keyPressed, 'i'));
         }
-        return true;
+        return r;
     }
 
     public void doSchedule(List<request> schedule){
-        doScheduleThread.stop();
         this.schedule=schedule;
-        doScheduleThread=new Thread(this);
+        doScheduleThread=new Thread(this::run);
         doScheduleThread.start();
+        try {
+            doScheduleThread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void run() {
         remainFloors.clear();
         remainFloors.addAll(schedule);
+        List<request> inner_requests = null;
+        boolean state = false;
         for(request r:schedule){
-            go(r.getFloor());
+            inner_requests = go(r.getFloor());
             remainFloors.remove(r);
+            remainFloors.addAll(inner_requests);
+            if (inner_requests.size() > 0) {
+                state = true;
+                break;
+            }
         }
+        List<request> new_requests = remainFloors;
+        if (state)
+            pressKey(new_requests);
+
     }
 
     public elevatorDirection getDirection() {
@@ -96,7 +116,7 @@ public class elevator implements Runnable {
         }
     }
     public void pressKey(List<request> requests) {
-        remainFloors.addAll(requests);
+        remainFloors = requests;
         doSchedule(scheduler.schedule(remainFloors,currentFloor,direction));
     }
 }

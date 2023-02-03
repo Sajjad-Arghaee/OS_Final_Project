@@ -25,7 +25,7 @@ public class scheduler {
             else if ((r.getFloor() < currentFloor) && ed == elevatorDirection.DOWN)
                 current_score += 10000;
             scores.add(current_score);
-            current_time -= 1;
+            current_time -= 10;
         }
         while (!scores.isEmpty()) {
             int current_max_index = 0;
@@ -42,7 +42,7 @@ public class scheduler {
             scores.remove(current_max_index);
 
         }
-
+// test to see scheduler result
 //        for (request s:schedule){
 //            System.out.print(s.getFloor());
 //            System.out.print(" ");
