@@ -4,13 +4,12 @@ import java.util.Date;
 
 public class request {
     private int floor;
-    private Date date;
+    private final long date = new Date().getTime();
     private char requestType;
 
     public request(int floor,char requestType){
         this.floor = floor;
         this.requestType=requestType;
-        date=new Date();
     }
 
     public int getFloor() {
@@ -18,7 +17,7 @@ public class request {
     }
 
     public long requestTime(){
-        return date.getTime();
+        return date;
     }
 
     public char getRequestType() {

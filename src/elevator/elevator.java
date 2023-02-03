@@ -72,14 +72,11 @@ public class elevator implements Runnable {
     @Override
     public void run() {
         remainFloors.clear();
-        for(request r :schedule){
-            remainFloors.add(r);
-        }
+        remainFloors.addAll(schedule);
         for(request r:schedule){
             go(r.getFloor());
             remainFloors.remove(r);
         }
-        this.direction= elevatorDirection.STAND;
     }
 
     public elevatorDirection getDirection() {
@@ -98,7 +95,7 @@ public class elevator implements Runnable {
             go(floor);
         }
     }
-    public void pressKey(List<request> requests){
+    public void pressKey(List<request> requests) {
         remainFloors.addAll(requests);
         doSchedule(scheduler.schedule(remainFloors,currentFloor,direction));
     }

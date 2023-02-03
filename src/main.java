@@ -19,6 +19,7 @@ public class main {
                 r.add(new request(keyPressed, 'i'));
             }
             e1.pressKey(r);
+            r.clear();
         }
 
     }
