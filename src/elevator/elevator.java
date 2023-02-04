@@ -8,6 +8,7 @@ import scheduler.scheduler;
 public class elevator implements Runnable {
     private int speed;
     private int waitTime ;
+    private int elevator_number;
     private int currentFloor;
     private List<request> schedule;
     private List<request> remainFloors=new ArrayList<request>();
@@ -18,11 +19,12 @@ public class elevator implements Runnable {
     private Thread doScheduleThread=new Thread(this);
 
     private elevatorDirection direction= elevatorDirection.STAND;
-    public elevator(int speed,int waitTime ,int currentFloor,int floorsCount){
+    public elevator(int speed,int waitTime ,int currentFloor,int floorsCount, int elevator_number){
         this.speed=speed;
         this.waitTime=waitTime;
         this.currentFloor=currentFloor;
         this.floorsCount=floorsCount;
+        this.elevator_number = elevator_number;
     }
 
     public List go(int destinationFloor){
@@ -37,6 +39,7 @@ public class elevator implements Runnable {
                     e.printStackTrace();
                 }
                 currentFloor++;
+                System.out.print("elevator " + elevator_number + " ");
                 System.out.println("floor:"+currentFloor);
 
             }
@@ -50,6 +53,7 @@ public class elevator implements Runnable {
                     e.printStackTrace();
                 }
                 currentFloor--;
+                System.out.print("elevator " + elevator_number + " ");
                 System.out.println("floor:"+currentFloor);
 
             }
@@ -115,8 +119,13 @@ public class elevator implements Runnable {
             go(floor);
         }
     }
-    public void pressKey(List<request> requests) {
+    public List<Object> pressKey(List<request> requests) {
         remainFloors = requests;
         doSchedule(scheduler.schedule(remainFloors,currentFloor,direction));
+        List<Object> result = new ArrayList<>();
+        result.add(remainFloors);
+        result.add(currentFloor);
+        result.add(this.direction);
+        return result;
     }
 }
